@@ -23,8 +23,8 @@ createInertiaApp({
             .use(ZiggyVue)
             .use(i18nVue, {
                 resolve: async (lang: string) => {
-                    const langs = import.meta.glob('../../lang/*.json');
-                    return await langs[`../../lang/${lang}.json`]();
+                    const langs = import.meta.glob('../../lang/*.json', { eager: true });
+                    return await langs[`../../lang/${lang}.json`];
                 },
             })
             .mount(el);
