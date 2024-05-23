@@ -1,8 +1,12 @@
 {
-    "name": "laravel/laravel",
+    "name": "xushulang/l-admin",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "The LAdmin management.",
+    "keywords": [
+        "laravel",
+        "framework",
+        "ladmin"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
