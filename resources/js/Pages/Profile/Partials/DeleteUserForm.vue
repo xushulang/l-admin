@@ -1,97 +1,127 @@
 <script setup lang="ts">
-import DangerButton from '@/Components/DangerButton.vue';
-import InputError from '@/Components/InputError.vue';
-import InputLabel from '@/Components/InputLabel.vue';
-import Modal from '@/Components/Modal.vue';
-import SecondaryButton from '@/Components/SecondaryButton.vue';
-import TextInput from '@/Components/TextInput.vue';
-import { useForm } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
+import { trans } from 'laravel-vue-i18n';
+import { FormInst, FormRules, NButton, NCard, NForm, NFormItem, NInput, NModal } from 'naive-ui';
 import { nextTick, ref } from 'vue';
 
-const confirmingUserDeletion = ref(false);
+const showModal = ref(false);
+
+const formRef = ref<FormInst | null>(null);
+const disabled = ref(false);
+
 const passwordInput = ref<HTMLInputElement | null>(null);
 
-const form = useForm({
+const model = ref({
     password: '',
 });
 
+const rules: FormRules = {
+    password: [
+        {
+            type: 'string',
+            required: true,
+            renderMessage: () => trans('Please enter :name', { name: trans('Password') }),
+            trigger: ['input', 'change'],
+        },
+        {
+            min: 8,
+            message: trans('validation.min.string', { Attribute: trans('Password'), min: '8' }),
+            trigger: ['input', 'change'],
+        },
+    ],
+};
+
 const confirmUserDeletion = () => {
-    confirmingUserDeletion.value = true;
+    showModal.value = true;
 
     nextTick(() => passwordInput.value?.focus());
 };
 
-const deleteUser = () => {
-    form.delete(route('profile.destroy'), {
-        preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => passwordInput.value?.focus(),
-        onFinish: () => {
-            form.reset();
-        },
+const deleteUser = (e: Event) => {
+    e.preventDefault();
+    disabled.value = true;
+
+    formRef.value?.validate((errors) => {
+        if (!errors) {
+            router.delete(route('profile.destroy'), {
+                onSuccess: () => {
+                    model.value.password = '';
+                },
+                onError: () => passwordInput.value?.focus(),
+                onFinish: () => {
+                    model.value.password = '';
+                },
+            });
+        }
+
+        disabled.value = false;
     });
-};
-
-const closeModal = () => {
-    confirmingUserDeletion.value = false;
-
-    form.reset();
 };
 </script>
 
 <template>
-    <section class="space-y-6">
-        <header>
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">Delete Account</h2>
-
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting
-                your account, please download any data or information that you wish to retain.
-            </p>
-        </header>
-
-        <DangerButton @click="confirmUserDeletion">Delete Account</DangerButton>
-
-        <Modal :show="confirmingUserDeletion" @close="closeModal">
-            <div class="p-6">
-                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                    Are you sure you want to delete your account?
-                </h2>
-
+    <n-card :title="$t('Delete Account')">
+        <div class="flex flex-col gap-2 sm:gap-4">
+            <header>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                    Once your account is deleted, all of its resources and data will be permanently deleted. Please
-                    enter your password to confirm you would like to permanently delete your account.
+                    {{
+                        $t(
+                            'Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.'
+                        )
+                    }}
                 </p>
+            </header>
 
-                <div class="mt-6">
-                    <InputLabel for="password" value="Password" class="sr-only" />
+            <div>
+                <n-button type="error" @click="confirmUserDeletion">{{ $t('Delete Account') }}</n-button>
 
-                    <TextInput
-                        id="password"
-                        ref="passwordInput"
-                        v-model="form.password"
-                        type="password"
-                        class="mt-1 block w-3/4"
-                        placeholder="Password"
-                        @keyup.enter="deleteUser"
-                    />
+                <n-modal v-model:show="showModal" preset="card" :title="$t('Confirm Password')" class="max-w-3xl">
+                    <div class="p-6">
+                        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            {{ $t('Are you sure you want to delete your account?') }}
+                        </h2>
 
-                    <InputError :message="form.errors.password" class="mt-2" />
-                </div>
+                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                            {{
+                                $t(
+                                    'Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.'
+                                )
+                            }}
+                        </p>
 
-                <div class="mt-6 flex justify-end">
-                    <SecondaryButton @click="closeModal"> Cancel </SecondaryButton>
+                        <div class="mt-6">
+                            <n-form
+                                :model="model"
+                                :rules="rules"
+                                ref="formRef"
+                                label-placement="left"
+                                require-mark-placement="right-hanging"
+                                :disabled="disabled"
+                                @submit.prevent="deleteUser"
+                            >
+                                <n-form-item first :label="$t('Password')" path="password">
+                                    <n-input
+                                        ref="passwordInput"
+                                        type="password"
+                                        :placeholder="$t('Please enter :name', { name: $t('Password') })"
+                                        v-model:value="model.password"
+                                        :input-props="{ autocomplete: 'password' }"
+                                        @keyup.enter="deleteUser"
+                                    />
+                                </n-form-item>
+                            </n-form>
+                        </div>
+                    </div>
 
-                    <DangerButton
-                        class="ms-3"
-                        :class="{ 'opacity-25': form.processing }"
-                        :disabled="form.processing"
-                        @click="deleteUser"
-                    >
-                        Delete Account
-                    </DangerButton>
-                </div>
+                    <template #footer>
+                        <div class="flex justify-end gap-2 sm:gap-4">
+                            <n-button @click="showModal = false">{{ $t('Cancel') }}</n-button>
+
+                            <n-button type="error" @click="deleteUser" :disabled>{{ $t('Delete Account') }}</n-button>
+                        </div>
+                    </template>
+                </n-modal>
             </div>
-        </Modal>
-    </section>
+        </div>
+    </n-card>
 </template>

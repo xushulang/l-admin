@@ -2,14 +2,21 @@
 import { useSettingStore } from '@/Stores/setting';
 import { Head } from '@inertiajs/vue3';
 import {
+    NBackTop,
     NConfigProvider,
     NDialogProvider,
     NLayout,
+    NLayoutContent,
+    NLayoutFooter,
+    NLayoutHeader,
     NLoadingBarProvider,
     NMessageProvider,
     NModalProvider,
     NNotificationProvider,
 } from 'naive-ui';
+import Header from './Header.vue';
+import Footer from './Footer.vue';
+import { toRefs } from 'vue';
 
 defineProps<{
     title?: string;
@@ -17,13 +24,7 @@ defineProps<{
     description?: string;
 }>();
 
-const settingStore = useSettingStore();
-
-const theme = settingStore.value.theme;
-
-const locale = settingStore.value.locale;
-
-const dateLocale = settingStore.value.dateLocale;
+const { theme, locale, dateLocale } = toRefs(useSettingStore().value);
 </script>
 
 <template>
@@ -40,10 +41,22 @@ const dateLocale = settingStore.value.dateLocale;
                     <n-notification-provider>
                         <n-message-provider>
                             <n-modal-provider>
-                                <n-layout embedded :native-scrollbar="false" class="h-screen">
-                                    <main>
-                                        <slot></slot>
-                                    </main>
+                                <n-layout :native-scrollbar="false" class="h-screen">
+                                    <n-layout-header>
+                                        <Header />
+                                    </n-layout-header>
+
+                                    <n-layout-content embedded>
+                                        <main>
+                                            <slot></slot>
+                                        </main>
+                                    </n-layout-content>
+
+                                    <n-layout-footer>
+                                        <Footer />
+                                    </n-layout-footer>
+
+                                    <n-back-top :bottom="100" />
                                 </n-layout>
                             </n-modal-provider>
                         </n-message-provider>
