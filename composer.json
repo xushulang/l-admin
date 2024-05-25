@@ -16,6 +16,7 @@
         "laravel/telescope": "^5.0",
         "laravel/tinker": "^2.9",
         "mews/captcha": "^3.3",
+        "overtrue/easy-sms": "^3.0",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
