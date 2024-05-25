@@ -2,9 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -28,7 +31,12 @@ class LoginRequest extends FormRequest
     {
         return [
             'auth' => ['required', 'string'],
-            'password' => ['required', 'string'],
+            'password' => ['nullable', 'string'],
+            'code' => ['nullable', 'string'],
+            'captcha' => [
+                config('captcha.disable') ? 'nullable' : 'required',
+                'captcha_api:' . request('key') . ',' . config('captcha.type')
+            ],
         ];
     }
 
@@ -41,16 +49,17 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (!(Auth::attempt(['username' => $this->input('auth'), 'password' => $this->input('password'),], $this->boolean('remember')) ||
-            Auth::attempt(['phone' => $this->input('auth'), 'password' => $this->input('password'),], $this->boolean('remember')) ||
-            Auth::attempt(['email' => $this->input('auth'), 'password' => $this->input('password'),], $this->boolean('remember'))
-        )) {
+        $user = $this->checkRequest();
+
+        if (is_null($user)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
                 'auth' => trans('auth.failed'),
             ]);
         }
+
+        Auth::login($user, $this->boolean('remember'));
 
         RateLimiter::clear($this->throttleKey());
     }
@@ -84,5 +93,16 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->string('auth')) . '|' . $this->ip());
+    }
+
+    public function checkRequest(): ?User
+    {
+        if ($this->phone && $this->code && ($this->code === Cache::get('phone_code_' . $this->phone))) {
+            return User::where('phone', $this->phone)->first();
+        } else {
+            $user = User::where('username', $this->auth)->orWhere('phone', $this->auth)->orWhere('email', $this->auth)->first();
+
+            return ($user && Hash::check($this->password, $user->password)) ? $user : null;
+        }
     }
 }
