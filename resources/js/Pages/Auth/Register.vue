@@ -54,7 +54,6 @@ const rules: FormRules = {
     name: [
         {
             type: 'string',
-            required: true,
             renderMessage: () => trans('Please enter :name', { name: trans('Name') }),
             trigger: ['input', 'change'],
         },
@@ -129,16 +128,14 @@ const getCode = (): void => {
     formRef.value?.validate(
         (errors) => {
             if (!errors) {
-                window.axios
-                    .post(route('api.verification.code.send'), { phone: model.value.phone })
-                    .then((response) => {
-                        if (response.data.status === 'success') {
-                            message.success(response.data.message);
-                            smsSent.value = true;
-                        } else {
-                            message.error(response.data.message);
-                        }
-                    });
+                window.axios.post(route('verification.code.phone'), { phone: model.value.phone }).then((response) => {
+                    if (response.data.status === 'success') {
+                        message.success(response.data.message);
+                        smsSent.value = true;
+                    } else {
+                        message.error(response.data.message);
+                    }
+                });
             }
         },
         (rule) => {
