@@ -66,6 +66,7 @@ const rules: FormRules = {
     email: [
         {
             type: 'email',
+            required: true,
             renderMessage: () => trans('Please enter :name', { name: trans('Email') }),
             trigger: ['input', 'change'],
         },
