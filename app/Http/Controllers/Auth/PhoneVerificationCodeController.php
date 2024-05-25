@@ -39,13 +39,20 @@ class PhoneVerificationCodeController extends Controller
             $validityPeriod = 180;
             Cache::put('phone_code_' . $request->phone, $code, $validityPeriod);
 
-            app('sms')->send($request->phone, [
-                'content'  => '您的验证码为: ' . $code,
-                'template' => config('sms.gateways.aliyun.template_code_verification'),
-                'data' => [
-                    'code' => $code
-                ],
-            ]);
+            try {
+                app('sms')->send($request->phone, [
+                    'content'  => '您的验证码为: ' . $code,
+                    'template' => config('sms.gateways.aliyun.template_code_verification'),
+                    'data' => [
+                        'code' => $code
+                    ],
+                ]);
+            } catch (\Throwable $th) {
+                return [
+                    'status' => 'failure',
+                    'message' => trans('Verification code sending failed.'),
+                ];
+            }
 
             return [
                 'status' => 'success',
@@ -54,7 +61,7 @@ class PhoneVerificationCodeController extends Controller
         } else {
             return [
                 'status' => 'failure',
-                'message' => trans('messages.Verification code has been sent.'),
+                'message' => trans('Verification code has been sent.'),
             ];
         }
     }
