@@ -33,7 +33,7 @@ const appName = ref<string>(import.meta.env.VITE_APP_NAME);
 
 const formRef = ref<FormInst | null>(null);
 const disabled = ref(false);
-const captchaDisable = ref<boolean>(import.meta.env.VITE_CAPTCHA_DISABLE);
+const captchaDisable = ref<boolean>(import.meta.env.VITE_CAPTCHA_DISABLE === 'true' ? true : false);
 const captcha = ref({
     sensitive: false,
     key: '',
@@ -129,7 +129,7 @@ const getCode = (): void => {
     formRef.value?.validate(
         (errors) => {
             if (!errors) {
-                window.axios.post(route('api.verification.code.send'), { phone: model.value.auth }).then((response) => {
+                window.axios.post(route('verification.code.phone'), { phone: model.value.auth }).then((response) => {
                     if (response.data.status === 'success') {
                         message.success(response.data.message);
                         smsSent.value = true;
