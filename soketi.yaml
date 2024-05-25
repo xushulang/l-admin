@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  soketi:
+    container_name: soketi
+    restart: always
+    image: quay.io/soketi/soketi:1.6-16-distroless
+    env_file:
+      - .env
+    ports:
+      - 6001:6001
