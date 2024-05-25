@@ -18,6 +18,7 @@
         "mews/captcha": "^3.3",
         "overtrue/easy-sms": "^3.0",
         "pusher/pusher-php-server": "^7.2",
+        "spatie/laravel-permission": "^6.7",
         "tightenco/ziggy": "^2.0"
     },
     "require-dev": {
