@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
-import { trans } from 'laravel-vue-i18n';
-import { FormInst, FormRules, NButton, NForm, NFormItem, NInput } from 'naive-ui';
-import { ref } from 'vue';
+import type { FormInst, FormRules } from 'naive-ui'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import { Head, useForm } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
+import { NButton, NForm, NFormItem, NInput } from 'naive-ui'
+import { useTemplateRef } from 'vue'
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestLayout })
 
-const formRef = ref<FormInst | null>(null);
-const disabled = ref(false);
+const formRef = useTemplateRef<FormInst | null>('formRef')
 
-const model = ref({
+const model = useForm({
     password: '',
-});
+})
 
 const rules: FormRules = {
     password: [
@@ -23,24 +23,21 @@ const rules: FormRules = {
             trigger: ['input', 'change'],
         },
     ],
-};
+}
 
-const submit = (e: Event) => {
-    e.preventDefault();
-    disabled.value = true;
+function submit(e: Event) {
+    e.preventDefault()
 
     formRef.value?.validate((errors) => {
         if (!errors) {
-            router.post(route('password.confirm'), model.value, {
+            model.post(route('password.confirm'), {
                 onFinish: () => {
-                    model.value.password = '';
+                    model.reset()
                 },
-            });
+            })
         }
-
-        disabled.value = false;
-    });
-};
+    })
+}
 </script>
 
 <template>
@@ -55,33 +52,33 @@ const submit = (e: Event) => {
                     }}
                 </div>
 
-                <n-form
-                    :model="model"
-                    :rules="rules"
+                <NForm
                     ref="formRef"
+                    :model
+                    :rules
                     label-placement="top"
                     require-mark-placement="right-hanging"
                     :label-width="160"
-                    :disabled="disabled"
+                    :disabled="model.processing"
                     @submit.prevent="submit"
                 >
-                    <n-form-item first :label="$t('Password')" path="password">
-                        <n-input
+                    <NFormItem first :label="$t('Password')" path="password">
+                        <NInput
+                            v-model:value="model.password"
                             type="password"
                             :placeholder="$t('Please enter :name', { name: $t('Password') })"
-                            v-model:value="model.password"
                             :input-props="{ autocomplete: 'current-password' }"
                         />
-                    </n-form-item>
+                    </NFormItem>
 
-                    <n-form-item :show-label="false" :show-feedback="false" class="justify-items-end">
+                    <NFormItem :show-label="false" :show-feedback="false" class="justify-items-end">
                         <div class="flex items-center gap-2">
-                            <n-button type="primary" attr-type="submit" class="px-4">
+                            <NButton type="primary" attr-type="submit" class="px-4">
                                 {{ $t('Confirm') }}
-                            </n-button>
+                            </NButton>
                         </div>
-                    </n-form-item>
-                </n-form>
+                    </NFormItem>
+                </NForm>
             </div>
         </div>
     </div>

@@ -1,26 +1,22 @@
-import { NIcon, darkTheme, dateEnUS, dateZhCN, enUS, lightTheme, zhCN } from 'naive-ui';
-import Moon from '@vicons/ionicons5/Moon';
-import SunnySharp from '@vicons/ionicons5/SunnySharp';
-import DesktopSharp from '@vicons/ionicons5/DesktopSharp';
-import { h } from 'vue';
+import IonDesktopSharp from '~icons/ion/desktop-sharp'
+import IonMoon from '~icons/ion/moon'
+import IonSunnySharp from '~icons/ion/sunny-sharp'
+import { darkTheme, dateEnUS, dateZhCN, enUS, lightTheme, zhCN } from 'naive-ui'
 
 export const themes = {
     light: {
         theme: lightTheme,
-        color: '#18A058',
-        icon: () => h(NIcon, null, () => h(SunnySharp)),
+        icon: IonSunnySharp,
     },
     dark: {
         theme: darkTheme,
-        color: '#4B5563',
-        icon: () => h(NIcon, null, () => h(Moon)),
+        icon: IonMoon,
     },
     auto: {
         theme: null,
-        color: '#2080f0',
-        icon: () => h(NIcon, null, () => h(DesktopSharp)),
+        icon: IonDesktopSharp,
     },
-};
+}
 
 export const languages = {
     en: {
@@ -31,4 +27,4 @@ export const languages = {
         locale: zhCN,
         dateLocale: dateZhCN,
     },
-};
+}

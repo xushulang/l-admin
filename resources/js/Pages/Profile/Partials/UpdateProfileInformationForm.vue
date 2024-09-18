@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { Link, router, usePage } from '@inertiajs/vue3';
-import { trans } from 'laravel-vue-i18n';
-import { FormInst, FormRules, NAutoComplete, NButton, NCard, NForm, NFormItem, NInput, useMessage } from 'naive-ui';
-import { computed, ref } from 'vue';
+import type { FormInst, FormRules } from 'naive-ui'
+import { Link, useForm, usePage } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
+import { NAutoComplete, NButton, NCard, NForm, NFormItem, NInput, useMessage } from 'naive-ui'
+import { computed, useTemplateRef } from 'vue'
 
 defineProps<{
-    mustVerifyEmail?: Boolean;
-    status?: String;
-}>();
+    mustVerifyEmail?: boolean
+    status?: string
+}>()
 
-const message = useMessage();
+const message = useMessage()
 
-const user = usePage().props.auth.user;
+const user = usePage().props.auth.user
 
-const formRef = ref<FormInst | null>(null);
-const disabled = ref(false);
+const formRef = useTemplateRef<FormInst | null>('formRef')
 
-const model = ref({
+const model = useForm({
     name: user.name,
     username: user.username,
     phone: user.phone,
     email: user.email,
-});
+})
 
 const rules: FormRules = {
     name: [
@@ -41,7 +41,7 @@ const rules: FormRules = {
         },
         {
             validator: (rule, value) => {
-                return /^[0-9a-z_-]{2,20}$/.test(value);
+                return /^[0-9a-z_-]{2,20}$/.test(value)
             },
             renderMessage: () => trans('validation.regex', { Attribute: trans('Username') }),
             trigger: ['input', 'change'],
@@ -57,7 +57,7 @@ const rules: FormRules = {
         },
         {
             validator: (rule, value) => {
-                return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(value);
+                return /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/.test(value)
             },
             renderMessage: () => trans('validation.regex', { Attribute: trans('Phone') }),
             trigger: ['input', 'change'],
@@ -71,38 +71,35 @@ const rules: FormRules = {
             trigger: ['input', 'change'],
         },
     ],
-};
+}
 
 const autoCompleteOptions = computed(() => {
     return ['@outlook.com', '@163.com', '@qq.com'].map((suffix) => {
-        const prefix = model.value.email.split('@')[0];
+        const prefix = model.email?.split('@')[0]
         return {
             label: prefix + suffix,
             value: prefix + suffix,
-        };
-    });
-});
+        }
+    })
+})
 
-const submit = (e: Event) => {
-    e.preventDefault();
-    disabled.value = true;
+function submit(e: Event) {
+    e.preventDefault()
 
     formRef.value?.validate((errors) => {
         if (!errors) {
-            router.patch(route('profile.update'), model.value, {
+            model.patch(route('profile.update'), {
                 onSuccess: () => {
-                    message.success(trans('Update :name', { name: trans('Success') }));
+                    message.success(trans('Update :name', { name: trans('Success') }))
                 },
-            });
+            })
         }
-
-        disabled.value = false;
-    });
-};
+    })
+}
 </script>
 
 <template>
-    <n-card :title="$t('Profile Information')">
+    <NCard :title="$t('Profile Information')">
         <div class="flex flex-col gap-2 sm:gap-4">
             <header>
                 <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -110,44 +107,44 @@ const submit = (e: Event) => {
                 </p>
             </header>
 
-            <n-form
-                :model="model"
-                :rules="rules"
+            <NForm
                 ref="formRef"
+                :model
+                :rules
                 label-placement="top"
                 require-mark-placement="right-hanging"
                 :label-width="160"
-                :disabled="disabled"
+                :disabled="model.processing"
                 @submit.prevent="submit"
             >
-                <n-form-item first :label="$t('Name')" path="name">
-                    <n-input
-                        :placeholder="$t('Please enter :name', { name: $t('Name') })"
+                <NFormItem first :label="$t('Name')" path="name">
+                    <NInput
                         v-model:value="model.name"
+                        :placeholder="$t('Please enter :name', { name: $t('Name') })"
                         :input-props="{ autocomplete: 'name' }"
                     />
-                </n-form-item>
+                </NFormItem>
 
-                <n-form-item first :label="$t('Username')" path="username">
-                    <n-input
-                        :placeholder="$t('Please enter :name', { name: $t('Username') })"
+                <NFormItem first :label="$t('Username')" path="username">
+                    <NInput
                         v-model:value="model.username"
+                        :placeholder="$t('Please enter :name', { name: $t('Username') })"
                         :input-props="{ autocomplete: 'username' }"
                     />
-                </n-form-item>
+                </NFormItem>
 
-                <n-form-item first :label="$t('Phone')" path="phone">
-                    <n-input
-                        :placeholder="$t('Please enter :name', { name: $t('Phone') })"
+                <NFormItem first :label="$t('Phone')" path="phone">
+                    <NInput
                         v-model:value="model.phone"
+                        :placeholder="$t('Please enter :name', { name: $t('Phone') })"
                         :input-props="{ autocomplete: 'tel' }"
                     />
-                </n-form-item>
+                </NFormItem>
 
-                <n-form-item first :label="$t('Email')" path="email">
-                    <n-auto-complete
-                        :placeholder="$t('Please enter :name', { name: $t('Email') })"
+                <NFormItem first :label="$t('Email')" path="email">
+                    <NAutoComplete
                         v-model:value="model.email"
+                        :placeholder="$t('Please enter :name', { name: $t('Email') })"
                         :options="autoCompleteOptions"
                         :input-props="{ autocomplete: 'email' }"
                     />
@@ -172,14 +169,16 @@ const submit = (e: Event) => {
                             {{ $t('A new verification link has been sent to your email address.') }}
                         </div>
                     </div>
-                </n-form-item>
+                </NFormItem>
 
-                <n-form-item :show-label="false" :show-feedback="false" class="justify-items-end">
+                <NFormItem :show-label="false" :show-feedback="false" class="justify-items-end">
                     <div class="flex items-center gap-2">
-                        <n-button type="primary" attr-type="submit" class="px-4">{{ $t('Save') }}</n-button>
+                        <NButton type="primary" attr-type="submit" class="px-4">
+                            {{ $t('Save') }}
+                        </NButton>
                     </div>
-                </n-form-item>
-            </n-form>
+                </NFormItem>
+            </NForm>
         </div>
-    </n-card>
+    </NCard>
 </template>

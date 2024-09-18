@@ -1,25 +1,25 @@
 <script setup lang="ts">
-import AppLayout from '@/Layouts/AppLayout/Index.vue';
-import { Head } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
+import AppLayout from '@/Layouts/AppLayout.vue'
+import { Head } from '@inertiajs/vue3'
+import { onMounted, ref } from 'vue'
 
-defineOptions({ layout: AppLayout });
+defineOptions({ layout: AppLayout })
 
 defineProps<{
-    canLogin?: boolean;
-    canRegister?: boolean;
-    laravelVersion?: string;
-    phpVersion?: string;
-}>();
+    canLogin?: boolean
+    canRegister?: boolean
+    laravelVersion?: string
+    phpVersion?: string
+}>()
 
-const height = ref(0);
+const height = ref(0)
 
 onMounted(() => {
-    height.value =
-        window.innerHeight -
-        document.querySelector('.n-layout-header')?.clientHeight! -
-        document.querySelector('.n-layout-footer')?.clientHeight!;
-});
+    height.value
+        = window.innerHeight
+        - (document.querySelector('.n-layout-header')?.clientHeight || 0)
+        - (document.querySelector('.n-layout-footer')?.clientHeight || 0)
+})
 </script>
 
 <template>
@@ -31,11 +31,13 @@ onMounted(() => {
                 id="background"
                 class="absolute -left-20 top-0 max-w-[877px]"
                 src="https://laravel.com/assets/img/welcome/background.svg"
-            />
+            >
 
-            <main :style="{ height: height + 'px' }">
+            <main :style="{ height: `${height}px` }">
                 <div class="flex flex-col justify-center items-center gap-2 sm:gap-4 h-full">
-                    <div class="text-3xl sm:text-5xl">LAdmin</div>
+                    <div class="text-3xl sm:text-5xl">
+                        LAdmin
+                    </div>
                     <div>Laravel v{{ laravelVersion }} (PHP v{{ phpVersion }})</div>
                 </div>
             </main>

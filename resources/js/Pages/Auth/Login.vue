@@ -1,53 +1,40 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
-import { onMounted, ref } from 'vue';
-import { trans } from 'laravel-vue-i18n';
-import {
-    FormInst,
-    FormRules,
-    NButton,
-    NCard,
-    NCheckbox,
-    NCountdown,
-    NForm,
-    NFormItem,
-    NH2,
-    NImage,
-    NInput,
-    useMessage,
-} from 'naive-ui';
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import type { FormInst, FormRules } from 'naive-ui'
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import { Head, Link, useForm } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
+import { NButton, NCard, NCheckbox, NCountdown, NForm, NFormItem, NH2, NImage, NInput, useMessage } from 'naive-ui'
+import { onMounted, ref, useTemplateRef } from 'vue'
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestLayout })
 
 defineProps<{
-    canResetPassword?: boolean;
-    status?: string;
-}>();
+    canResetPassword?: boolean
+    status?: string
+}>()
 
-const message = useMessage();
+const message = useMessage()
 
-const loginType = ref('account');
-const appName = ref<string>(import.meta.env.VITE_APP_NAME);
+const loginType = ref('account')
+const appName = ref<string>(import.meta.env.VITE_APP_NAME)
 
-const formRef = ref<FormInst | null>(null);
-const disabled = ref(false);
-const captchaDisable = ref<boolean>(import.meta.env.VITE_CAPTCHA_DISABLE === 'true' ? true : false);
+const formRef = useTemplateRef<FormInst | null>('formRef')
+const captchaDisable = ref<boolean>(import.meta.env.VITE_CAPTCHA_DISABLE === 'true')
 const captcha = ref({
     sensitive: false,
     key: '',
     img: '',
-});
+})
 
-const model = ref({
+const model = useForm({
     auth: '',
     password: '',
     code: '',
     key: '',
     captcha: '',
     remember: false,
-});
+})
 
 const rules: FormRules = {
     auth: [
@@ -55,14 +42,14 @@ const rules: FormRules = {
             type: 'string',
             required: true,
             renderMessage: () =>
-                trans('Please enter :name', { name: trans('Phone') + '/' + trans('Email') + '/' + trans('Username') }),
+                trans('Please enter :name', { name: `${trans('Phone')}/${trans('Email')}/${trans('Username')}` }),
             trigger: ['input', 'change'],
         },
         {
             key: 'phone',
             validator: (rule, value) => {
                 if (loginType.value === 'code') {
-                    return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(value);
+                    return /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/.test(value)
                 }
             },
             renderMessage: () => trans('validation.regex', { Attribute: trans('Phone') }),
@@ -74,7 +61,7 @@ const rules: FormRules = {
             type: 'string',
             validator: (rule, value) => {
                 if (!value && loginType.value === 'account') {
-                    return false;
+                    return false
                 }
             },
             renderMessage: () => trans('Please enter :name', { name: trans('Password') }),
@@ -86,7 +73,7 @@ const rules: FormRules = {
             type: 'string',
             validator: (rule, value) => {
                 if (!value && loginType.value === 'code') {
-                    return false;
+                    return false
                 }
             },
             renderMessage: () => trans('Please enter :name', { name: trans('Code') }),
@@ -117,63 +104,63 @@ const rules: FormRules = {
             trigger: ['input', 'change'],
         },
     ],
-};
+}
 
-const smsSent = ref(false);
+const smsSent = ref(false)
 
-const renderCountdown = ({ seconds }: { seconds: number }): string => {
-    return String(seconds).padStart(2, '0') + '秒后可重新发送';
-};
+function renderCountdown({ seconds }: { seconds: number }): string {
+    return `${String(seconds).padStart(2, '0')}秒后可重新发送`
+}
 
-const getCode = (): void => {
+function getCode(): void {
     formRef.value?.validate(
         (errors) => {
             if (!errors) {
-                window.axios.post(route('verification.code.phone'), { phone: model.value.auth }).then((response) => {
+                axios.post(route('verification.code.phone'), { phone: model.auth }).then((response) => {
                     if (response.data.status === 'success') {
-                        message.success(response.data.message);
-                        smsSent.value = true;
-                    } else {
-                        message.error(response.data.message);
+                        message.success(response.data.message)
+                        smsSent.value = true
                     }
-                });
+                    else {
+                        message.error(response.data.message)
+                    }
+                })
             }
         },
         (rule) => {
-            return rule?.key === 'phone';
-        }
-    );
-};
+            return rule?.key === 'phone'
+        },
+    )
+}
 
-const getCaptcha = (): void => {
-    window.axios.get('/captcha/api/' + import.meta.env.VITE_CAPTCHA_TYPE + '?' + Math.random()).then((response) => {
-        captcha.value.sensitive = response.data.sensitive;
-        captcha.value.key = response.data.key;
-        captcha.value.img = response.data.img;
-        model.value.key = response.data.key;
-    });
-};
+function getCaptcha(): void {
+    axios.get(`/captcha/api/${import.meta.env.VITE_CAPTCHA_TYPE}?${Math.random()}`).then((response) => {
+        captcha.value.sensitive = response.data.sensitive
+        captcha.value.key = response.data.key
+        captcha.value.img = response.data.img
+        model.key = response.data.key
+    })
+}
 
-const submit = (e: Event): void => {
-    e.preventDefault();
-    disabled.value = true;
+function submit(e: Event): void {
+    e.preventDefault()
 
     formRef.value?.validate((errors) => {
         if (!errors) {
-            router.post(route('login'), model.value, {
+            model.post(route('login'), {
                 onError: (errors) => {
-                    message.error(Object.values(errors)[0]);
+                    message.error(Object.values(errors)[0])
                 },
-            });
+            })
         }
-
-        disabled.value = false;
-    });
-};
+    })
+}
 
 onMounted(() => {
-    getCaptcha();
-});
+    if (!captchaDisable.value) {
+        getCaptcha()
+    }
+})
 </script>
 
 <template>
@@ -184,91 +171,89 @@ onMounted(() => {
             <div class="w-full max-w-[28rem] flex flex-col justify-center items-center gap-3">
                 <ApplicationLogo full class="w-20 h-20 fill-current text-gray-500" />
 
-                <n-card class="shadow-sm" :segmented="{ content: true, footer: 'soft' }">
+                <NCard class="shadow-sm" :segmented="{ content: true, footer: 'soft' }">
                     <template #header>
-                        <n-h2 class="!m-0">{{ $t('Welcome to :name!', { name: appName }) }}</n-h2>
+                        <NH2 class="!m-0">
+                            {{ $t('Welcome to :name!', { name: appName }) }}
+                        </NH2>
                     </template>
 
-                    <n-form
-                        :model="model"
-                        :rules="rules"
+                    <NForm
                         ref="formRef"
+                        :model
+                        :rules
                         label-placement="top"
                         require-mark-placement="right-hanging"
                         :label-width="160"
-                        :disabled="disabled"
+                        :disabled="model.processing"
                         @submit.prevent="submit"
                     >
-                        <n-form-item first :label="$t('Phone') + '/' + $t('Email') + '/' + $t('Username')" path="auth">
-                            <n-input
-                                type="text"
-                                :placeholder="
-                                    $t('Please enter :name', { name: $t('Phone') }) +
-                                    '/' +
-                                    $t('Email') +
-                                    '/' +
-                                    $t('Username')
-                                "
+                        <NFormItem first :label="`${$t('Phone')}/${$t('Email')}/${$t('Username')}`" path="auth">
+                            <NInput
                                 v-model:value="model.auth"
+                                type="text"
+                                :placeholder=" `${$t('Please enter :name', { name: $t('Phone') })}/${$t('Email')}/${$t('Username')}` "
                                 autofocus
                             />
-                        </n-form-item>
+                        </NFormItem>
 
-                        <n-form-item
+                        <NFormItem
                             v-if="loginType === 'account'"
                             first
                             show-require-mark
                             :label="$t('Password')"
                             path="password"
                         >
-                            <n-input
+                            <NInput
+                                v-model:value="model.password"
                                 type="password"
                                 :placeholder="$t('Please enter :name', { name: $t('Password') })"
-                                v-model:value="model.password"
                             />
-                        </n-form-item>
+                        </NFormItem>
 
-                        <n-form-item v-else first show-require-mark :label="$t('SMS Verification Code')" path="code">
+                        <NFormItem v-else first show-require-mark :label="$t('SMS Verification Code')" path="code">
                             <div class="w-full flex justify-between gap-2">
-                                <n-input
+                                <NInput
+                                    v-model:value="model.code"
                                     type="text"
                                     :placeholder="$t('Please enter :name', { name: $t('Code') })"
-                                    v-model:value="model.code"
                                 />
-                                <n-button v-if="!smsSent" type="info" @click="getCode">
+                                <NButton v-if="!smsSent" type="info" @click="getCode">
                                     {{ $t('Send Verification Code') }}
-                                </n-button>
-                                <n-button v-else type="error">
-                                    <n-countdown
+                                </NButton>
+                                <NButton v-else type="error">
+                                    <NCountdown
                                         :render="renderCountdown"
                                         :duration="59000"
                                         @finish="smsSent = false"
                                     />
-                                </n-button>
+                                </NButton>
                             </div>
-                        </n-form-item>
+                        </NFormItem>
 
-                        <n-form-item v-if="!captchaDisable" first :label="$t('Captcha')" path="captcha">
+                        <NFormItem v-if="!captchaDisable" first :label="$t('Captcha')" path="captcha">
                             <div class="w-full flex justify-between gap-2">
-                                <n-input
+                                <NInput
+                                    v-model:value="model.captcha"
                                     type="text"
                                     :placeholder="$t('Please enter :name', { name: $t('Captcha') })"
-                                    v-model:value="model.captcha"
                                 />
-                                <n-image
+                                <NImage
                                     :src="captcha.img"
                                     preview-disabled
-                                    @click="getCaptcha"
                                     class="cursor-pointer"
+                                    @click="getCaptcha"
                                 />
                             </div>
-                        </n-form-item>
+                        </NFormItem>
 
-                        <n-form-item first :show-label="false" :show-feedback="false" path="remember">
-                            <n-checkbox v-model:checked="model.remember">{{ $t('Remember me') }}</n-checkbox>
-                        </n-form-item>
+                        <NFormItem first :show-label="false" :show-feedback="false" path="remember">
+                            <NCheckbox v-model:checked="model.remember">
+                                {{ $t('Remember me') }}
+                            </NCheckbox>
+                        </NFormItem>
 
-                        <n-form-item :show-label="false" :show-feedback="false" class="justify-items-end">
+                        <NFormItem :show-label="false" :show-feedback="false" class="justify-items-end">
                             <div class="flex items-center gap-2">
                                 <Link
                                     v-if="canResetPassword"
@@ -278,10 +263,12 @@ onMounted(() => {
                                     {{ $t('Forgot your password?') }}
                                 </Link>
 
-                                <n-button type="primary" attr-type="submit" class="px-4">{{ $t('Log In') }}</n-button>
+                                <NButton type="primary" attr-type="submit" class="px-4">
+                                    {{ $t('Log In') }}
+                                </NButton>
                             </div>
-                        </n-form-item>
-                    </n-form>
+                        </NFormItem>
+                    </NForm>
 
                     <template #footer>
                         <div class="flex justify-between">
@@ -296,22 +283,22 @@ onMounted(() => {
                             <div class="ml-auto">
                                 <div
                                     v-if="loginType === 'account'"
-                                    @click="loginType = 'code'"
                                     class="hover:text-[var(--n-color-target)] cursor-pointer"
+                                    @click="loginType = 'code'"
                                 >
                                     {{ $t('SMS Verification Code Login') }}
                                 </div>
                                 <div
                                     v-else
-                                    @click="loginType = 'account'"
                                     class="hover:text-[var(--n-color-target)] cursor-pointer"
+                                    @click="loginType = 'account'"
                                 >
                                     {{ $t('Account Password Login') }}
                                 </div>
                             </div>
                         </div>
                     </template>
-                </n-card>
+                </NCard>
             </div>
         </div>
     </div>

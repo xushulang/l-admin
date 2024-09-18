@@ -1,55 +1,44 @@
 <script setup lang="ts">
-import { useSettingStore } from '@/Stores/setting';
-import { Head } from '@inertiajs/vue3';
-import {
-    NConfigProvider,
-    NDialogProvider,
-    NLayout,
-    NLoadingBarProvider,
-    NMessageProvider,
-    NModalProvider,
-    NNotificationProvider,
-} from 'naive-ui';
+import { useSettingStore } from '@/Stores/setting'
+import { Head } from '@inertiajs/vue3'
+import { NConfigProvider, NDialogProvider, NLayout, NLoadingBarProvider, NMessageProvider, NModalProvider, NNotificationProvider } from 'naive-ui'
+import { toRefs } from 'vue'
 
 defineProps<{
-    title?: string;
-    keywords?: string;
-    description?: string;
-}>();
+    title?: string
+    keywords?: string
+    description?: string
+}>()
 
-const settingStore = useSettingStore();
-
-const theme = settingStore.value.theme;
-
-const locale = settingStore.value.locale;
-
-const dateLocale = settingStore.value.dateLocale;
+const { theme, locale, dateLocale } = toRefs(useSettingStore().value)
 </script>
 
 <template>
     <div>
         <Head>
-            <title v-if="title">{{ title }}</title>
-            <meta v-if="keywords" name="keywords" :content="keywords" />
-            <meta v-if="description" name="description" :content="description" />
+            <title v-if="title">
+                {{ title }}
+            </title>
+            <meta v-if="keywords" name="keywords" :content="keywords">
+            <meta v-if="description" name="description" :content="description">
         </Head>
 
-        <n-config-provider :theme :locale :dateLocale>
-            <n-loading-bar-provider>
-                <n-dialog-provider>
-                    <n-notification-provider>
-                        <n-message-provider>
-                            <n-modal-provider>
-                                <n-layout embedded :native-scrollbar="false" class="h-screen">
+        <NConfigProvider :theme :locale :date-locale>
+            <NLoadingBarProvider>
+                <NDialogProvider>
+                    <NNotificationProvider>
+                        <NMessageProvider>
+                            <NModalProvider>
+                                <NLayout embedded :native-scrollbar="false" class="h-screen">
                                     <main>
-                                        <slot></slot>
+                                        <slot />
                                     </main>
-                                </n-layout>
-                            </n-modal-provider>
-                        </n-message-provider>
-                    </n-notification-provider>
-                </n-dialog-provider>
-            </n-loading-bar-provider>
-        </n-config-provider>
+                                </NLayout>
+                            </NModalProvider>
+                        </NMessageProvider>
+                    </NNotificationProvider>
+                </NDialogProvider>
+            </NLoadingBarProvider>
+        </NConfigProvider>
     </div>
 </template>

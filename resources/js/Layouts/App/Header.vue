@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import Menu from './Menu.vue';
-import { NDivider } from 'naive-ui';
-import UserCenter from './UserCenter.vue';
-import Mode from '@/Components/Mode.vue';
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'
+import ThemeMode from '@/Components/ThemeMode.vue'
+import { NDivider } from 'naive-ui'
+import Menu from './Menu.vue'
+import UserCenter from './UserCenter.vue'
 </script>
 
 <template>
@@ -16,12 +16,12 @@ import Mode from '@/Components/Mode.vue';
             </div>
 
             <div class="flex items-center gap-3 sm:gap-6">
-                <Mode />
+                <ThemeMode />
 
                 <UserCenter :user="$page.props.auth.user" />
             </div>
         </div>
 
-        <n-divider class="!m-0" />
+        <NDivider class="!m-0" />
     </div>
 </template>

@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
-import { FormInst, FormRules, NAutoComplete, NButton, NForm, NFormItem } from 'naive-ui';
-import { trans } from 'laravel-vue-i18n';
+import type { FormInst, FormRules } from 'naive-ui'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import { Head, useForm } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
+import { NAutoComplete, NButton, NForm, NFormItem } from 'naive-ui'
+import { computed, useTemplateRef } from 'vue'
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestLayout })
 
-defineProps<{
-    status?: string;
-}>();
+defineProps<{ status?: string }>()
 
-const formRef = ref<FormInst | null>(null);
-const disabled = ref(false);
+const formRef = useTemplateRef<FormInst | null>('formRef')
 
-const model = ref({
+const model = useForm({
     email: '',
-});
+})
 
 const rules: FormRules = {
     email: [
@@ -27,33 +25,30 @@ const rules: FormRules = {
             trigger: ['input', 'change'],
         },
     ],
-};
+}
 
 const autoCompleteOptions = computed(() => {
     return ['@outlook.com', '@163.com', '@qq.com'].map((suffix) => {
-        const prefix = model.value.email.split('@')[0];
+        const prefix = model.email.split('@')[0]
         return {
             label: prefix + suffix,
             value: prefix + suffix,
-        };
-    });
-});
-const submit = (e: Event) => {
-    e.preventDefault();
-    disabled.value = true;
+        }
+    })
+})
+function submit(e: Event) {
+    e.preventDefault()
 
     formRef.value?.validate((errors) => {
         if (!errors) {
-            router.post(route('password.email'), model.value, {
+            model.post(route('password.email'), {
                 onFinish: () => {
-                    model.value.email = '';
+                    model.reset()
                 },
-            });
+            })
         }
-
-        disabled.value = false;
-    });
-};
+    })
+}
 </script>
 
 <template>
@@ -65,7 +60,7 @@ const submit = (e: Event) => {
                 <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
                     {{
                         $t(
-                            'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.'
+                            'Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.',
                         )
                     }}
                 </div>
@@ -74,33 +69,33 @@ const submit = (e: Event) => {
                     {{ status }}
                 </div>
 
-                <n-form
-                    :model="model"
-                    :rules="rules"
+                <NForm
                     ref="formRef"
+                    :model
+                    :rules
                     label-placement="left"
                     require-mark-placement="right-hanging"
-                    :disabled="disabled"
+                    :disabled="model.processing"
                     class="w-full"
                     @submit.prevent="submit"
                 >
-                    <n-form-item first :label="$t('Email')" path="email">
-                        <n-auto-complete
-                            :placeholder="$t('Please enter :name', { name: $t('Email') })"
+                    <NFormItem first :label="$t('Email')" path="email">
+                        <NAutoComplete
                             v-model:value="model.email"
+                            :placeholder="$t('Please enter :name', { name: $t('Email') })"
                             :options="autoCompleteOptions"
                             :input-props="{ autocomplete: 'email' }"
                         />
-                    </n-form-item>
+                    </NFormItem>
 
-                    <n-form-item :show-label="false" :show-feedback="false" class="justify-items-end">
+                    <NFormItem :show-label="false" :show-feedback="false" class="justify-items-end">
                         <div class="flex items-center gap-2">
-                            <n-button type="primary" attr-type="submit" class="px-4">
+                            <NButton type="primary" attr-type="submit" class="px-4">
                                 {{ $t('Email Password Reset Link') }}
-                            </n-button>
+                            </NButton>
                         </div>
-                    </n-form-item>
-                </n-form>
+                    </NFormItem>
+                </NForm>
             </div>
         </div>
     </div>

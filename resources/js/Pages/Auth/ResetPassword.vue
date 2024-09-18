@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { Head, router } from '@inertiajs/vue3';
-import { trans } from 'laravel-vue-i18n';
-import { FormInst, FormRules, NAutoComplete, NButton, NForm, NFormItem, NInput } from 'naive-ui';
-import { computed, ref } from 'vue';
+import type { FormInst, FormRules } from 'naive-ui'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
+import { Head, useForm } from '@inertiajs/vue3'
+import { trans } from 'laravel-vue-i18n'
+import { NAutoComplete, NButton, NForm, NFormItem, NInput } from 'naive-ui'
+import { computed, useTemplateRef } from 'vue'
 
-defineOptions({ layout: GuestLayout });
+defineOptions({ layout: GuestLayout })
 
 const props = defineProps<{
-    email: string;
-    token: string;
-}>();
+    email: string
+    token: string
+}>()
 
-const formRef = ref<FormInst | null>(null);
-const disabled = ref(false);
+const formRef = useTemplateRef<FormInst | null>('formRef')
 
-const model = ref({
+const model = useForm({
     token: props.token,
     email: props.email,
     password: '',
     password_confirmation: '',
-});
+})
 
 const rules: FormRules = {
     phone: [
@@ -33,7 +33,7 @@ const rules: FormRules = {
         },
         {
             validator: (rule, value) => {
-                return /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(value);
+                return /^\+?\(?\d{3}\)?[-\s.]?\d{3}[-\s.]?\d{4,6}$/.test(value)
             },
             renderMessage: () => trans('validation.regex', { Attribute: trans('Phone') }),
             trigger: ['input', 'change'],
@@ -63,7 +63,7 @@ const rules: FormRules = {
         },
         {
             validator: (rule, value) => {
-                return value === model.value.password;
+                return value === model.password
             },
             renderMessage: () => trans('validation.confirmed', { Attribute: trans('Password') }),
             trigger: ['input', 'change'],
@@ -77,35 +77,32 @@ const rules: FormRules = {
             trigger: ['input', 'change'],
         },
     ],
-};
+}
 
 const autoCompleteOptions = computed(() => {
     return ['@outlook.com', '@163.com', '@qq.com'].map((suffix) => {
-        const prefix = model.value.email.split('@')[0];
+        const prefix = model.email.split('@')[0]
         return {
             label: prefix + suffix,
             value: prefix + suffix,
-        };
-    });
-});
+        }
+    })
+})
 
-const submit = (e: Event) => {
-    e.preventDefault();
-    disabled.value = true;
+function submit(e: Event) {
+    e.preventDefault()
 
     formRef.value?.validate((errors) => {
         if (!errors) {
-            router.post(route('password.store'), model.value, {
+            model.post(route('password.store'), {
                 onFinish: () => {
-                    model.value.password = '';
-                    model.value.password_confirmation = '';
+                    model.password = ''
+                    model.password_confirmation = ''
                 },
-            });
+            })
         }
-
-        disabled.value = false;
-    });
-};
+    })
+}
 </script>
 
 <template>
@@ -114,52 +111,52 @@ const submit = (e: Event) => {
 
         <div class="min-h-screen flex justify-center items-center">
             <div class="w-full max-w-[28rem] flex flex-col justify-center gap-3">
-                <n-form
-                    :model="model"
-                    :rules="rules"
+                <NForm
                     ref="formRef"
+                    :model
+                    :rules
                     label-placement="top"
                     require-mark-placement="right-hanging"
                     :label-width="160"
-                    :disabled="disabled"
+                    :disabled="model.processing"
                     @submit.prevent="submit"
                 >
-                    <n-form-item first :label="$t('Email')" path="email">
-                        <n-auto-complete
-                            :placeholder="$t('Email')"
+                    <NFormItem first :label="$t('Email')" path="email">
+                        <NAutoComplete
                             v-model:value="model.email"
+                            :placeholder="$t('Email')"
                             :options="autoCompleteOptions"
                             :input-props="{ autocomplete: 'email' }"
                         />
-                    </n-form-item>
+                    </NFormItem>
 
-                    <n-form-item first :label="$t('Password')" path="password">
-                        <n-input
+                    <NFormItem first :label="$t('Password')" path="password">
+                        <NInput
+                            v-model:value="model.password"
                             type="password"
                             :placeholder="$t('Password')"
-                            v-model:value="model.password"
                             :input-props="{ autocomplete: 'new-password' }"
                         />
-                    </n-form-item>
+                    </NFormItem>
 
-                    <n-form-item first :label="$t('Confirm Password')" path="password_confirmation">
-                        <n-input
+                    <NFormItem first :label="$t('Confirm Password')" path="password_confirmation">
+                        <NInput
+                            v-model:value="model.password_confirmation"
                             :placeholder="$t('Confirm Password')"
                             :disabled="!model.password"
-                            v-model:value="model.password_confirmation"
                             type="password"
                             :input-props="{ autocomplete: 'new-password' }"
                         />
-                    </n-form-item>
+                    </NFormItem>
 
-                    <n-form-item :show-label="false" :show-feedback="false" class="justify-items-end">
+                    <NFormItem :show-label="false" :show-feedback="false" class="justify-items-end">
                         <div class="flex items-center gap-2">
-                            <n-button type="primary" attr-type="submit" class="px-4">
+                            <NButton type="primary" attr-type="submit" class="px-4">
                                 {{ $t('Reset Password') }}
-                            </n-button>
+                            </NButton>
                         </div>
-                    </n-form-item>
-                </n-form>
+                    </NFormItem>
+                </NForm>
             </div>
         </div>
     </div>
