@@ -12,7 +12,7 @@ const showUserSearchForm = toRef(useAdminStore().value, 'showUserSearchForm')
         <CreateOrEdit />
 
         <NButton @click="showUserSearchForm = !showUserSearchForm">
-            {{ showUserSearchForm ? '收起搜索' : '展开搜索' }}
+            {{ showUserSearchForm ? $t('Collapse :name', { name: $t('Search') }) : $t('Expand :name', { name: $t('Search') }) }}
         </NButton>
     </div>
 </template>
