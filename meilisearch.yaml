@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  meilisearch:
+    container_name: meilisearch
+    restart: always
+    image: getmeili/meilisearch:v1.10
+    env_file:
+      - .env
+    ports:
+      - 7700:7700
+    volumes:
+      - /opt/meilisearch/meili_data:/meili_data
