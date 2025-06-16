@@ -1,0 +1,14 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "concat_space": {
+            "spacing": "one"
+        },
+        "function_declaration": {
+            "closure_fn_spacing": "none"
+        },
+        "whitespace_after_comma_in_array": {
+            "ensure_single_space": true
+        }
+    }
+}
