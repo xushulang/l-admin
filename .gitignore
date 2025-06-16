@@ -21,3 +21,5 @@ yarn-error.log
 !/.vscode/launch.json
 !/.vscode/settings.json
 /lang/php_*.json
+/meilisearch_data
+/mysql_data
