@@ -5,12 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ladmin",
+            "command": "npm run dev",
+            "name": "Run Dev",
             "request": "launch",
-            "runtimeArgs": ["run", "dev"],
-            "runtimeExecutable": "npm",
-            "skipFiles": ["<node_internals>/**"],
-            "type": "node"
+            "type": "node-terminal"
         }
     ]
 }
