@@ -1,0 +1,56 @@
+services:
+    php:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: l-admin-php84-fpm
+        volumes:
+            - ..:/workspaces/l-admin
+        network_mode: service:mysql
+        depends_on:
+            - mysql
+            - redis
+
+    nginx:
+        image: nginx:1.24
+        container_name: l-admin-nginx
+        volumes:
+            - ..:/var/www/html
+            - ./nginx.conf:/etc/nginx/nginx.conf
+        network_mode: service:mysql
+        depends_on:
+            - php
+
+    mysql:
+        image: mysql:8.0
+        container_name: l-admin-mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: rootpassword
+            MYSQL_DATABASE: l-admin
+            MYSQL_USER: l-admin
+            MYSQL_PASSWORD: l-admin
+        user: 1000:1000
+        volumes:
+            - ../mysql_data:/var/lib/mysql
+
+    redis:
+        image: redis:7.2.4
+        container_name: l-admin-redis
+        network_mode: service:mysql
+
+    meilisearch:
+        image: getmeili/meilisearch:v1.6
+        container_name: l-admin-meilisearch
+        env_file:
+            - ../.env
+        user: 1000:1000
+        volumes:
+            - ../meilisearch_data:/meili_data
+        network_mode: service:mysql
+
+    soketi:
+        image: quay.io/soketi/soketi:1.6-16-distroless
+        container_name: l-admin-soketi
+        env_file:
+            - ../.env
+        network_mode: service:mysql

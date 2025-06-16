@@ -1,0 +1,125 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/php
+{
+    "name": "l-admin",
+    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+    "dockerComposeFile": "docker-compose.yml",
+
+    "service": "php",
+
+    "workspaceFolder": "/workspaces/l-admin",
+
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    // "features": {},
+
+    // Configure tool-specific properties.
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "editor.formatOnSave": false,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+                "laravel-pint.enable": true,
+                "[php]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "open-southeners.laravel-pint"
+                },
+
+                "blade.format.enable": true,
+                "[blade]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "onecentlin.laravel-blade",
+                    "files.insertFinalNewline": true
+                },
+
+                "i18n-ally.localesPaths": ["lang"],
+
+                "editor.codeActionsOnSave": {
+                    "source.fixAll.eslint": "explicit",
+                    "source.organizeImports": "never"
+                },
+
+                "eslint.rules.customizations": [
+                    { "rule": "style/*", "severity": "off", "fixable": true },
+                    { "rule": "format/*", "severity": "off", "fixable": true },
+                    { "rule": "*-indent", "severity": "off", "fixable": true },
+                    { "rule": "*-spacing", "severity": "off", "fixable": true },
+                    { "rule": "*-spaces", "severity": "off", "fixable": true },
+                    { "rule": "*-order", "severity": "off", "fixable": true },
+                    { "rule": "*-dangle", "severity": "off", "fixable": true },
+                    { "rule": "*-newline", "severity": "off", "fixable": true },
+                    { "rule": "*quotes", "severity": "off", "fixable": true },
+                    { "rule": "*semi", "severity": "off", "fixable": true }
+                ],
+
+                "eslint.validate": [
+                    "javascript",
+                    "javascriptreact",
+                    "typescript",
+                    "typescriptreact",
+                    "vue",
+                    "html",
+                    "markdown",
+                    "json",
+                    "jsonc",
+                    "yaml",
+                    "toml",
+                    "xml",
+                    "gql",
+                    "graphql",
+                    "astro",
+                    "svelte",
+                    "css",
+                    "less",
+                    "scss",
+                    "pcss",
+                    "postcss"
+                ]
+            },
+
+            "extensions": [
+                "MS-CEINTL.vscode-language-pack-zh-hans",
+                "Codeium.codeium",
+                "RooVeterinaryInc.roo-cline",
+                "bmewburn.vscode-intelephense-client",
+                "eamodio.gitlens",
+                "esbenp.prettier-vscode",
+                "neilbrayfield.php-docblocker",
+                "xabikos.JavaScriptSnippets",
+                "sdras.vue-vscode-snippets",
+                "dbaeumer.vscode-eslint",
+                "lokalise.i18n-ally",
+                "yzhang.markdown-all-in-one",
+                "bradlc.vscode-tailwindcss",
+                "Natizyskunk.sftp",
+                "johnsoncodehk.vscode-tsconfig-helper",
+                "Vue.volar",
+                "laravel.vscode-laravel",
+                "open-southeners.laravel-pint",
+                "onecentlin.laravel5-snippets",
+                "onecentlin.laravel-blade"
+            ]
+        }
+    },
+
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    "forwardPorts": [80, 3306, 6001, 7700],
+
+    "initializeCommand": {
+        "createEnvFile": "[ ! -f .env ] && cp .env.example .env || echo \".env file already exists\"",
+        "createMysqlDataDirectory": "[ ! -d mysql_data ] && mkdir -m 777 mysql_data || echo \"mysql_data directory already exists\"",
+        "createMeilisearchDataDirectory": "[ ! -d meilisearch_data ] && mkdir -m 777 meilisearch_data || echo \"meilisearch_data directory already exists\""
+    },
+
+    // Use 'postCreateCommand' to run commands after the container is created.
+    // "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html"
+    "postCreateCommand": "chmod +x ./.devcontainer/start.sh && ./.devcontainer/start.sh",
+
+    "postStartCommand": {
+        "queue": "nohup bash -c 'php artisan queue:listen &' > /dev/null 2>&1",
+        "schedule": "nohup bash -c 'php artisan schedule:work &' > /dev/null 2>&1"
+    },
+
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    "remoteUser": "vscode"
+}
