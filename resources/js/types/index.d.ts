@@ -1,23 +1,25 @@
-export interface User {
+export interface Timestamps {
+    created_at: string
+    updated_at: string
+}
+
+export interface User extends Timestamps {
     id: number
     name: string
     username: string
     phone: string
     email: string
+    profile_photo_path: string
     profile_photo_url: string
     email_verified_at: string
-    created_at: string
-    updated_at: string
 }
 
-export interface Role {
+export interface Role extends Timestamps {
     id: number
     name: string
     title: string
     description: string
     guard_name: string
-    created_at: string
-    updated_at: string
 }
 
 export interface Data<T> {
