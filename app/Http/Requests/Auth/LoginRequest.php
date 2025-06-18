@@ -35,7 +35,7 @@ class LoginRequest extends FormRequest
             'code' => ['nullable', 'string'],
             'captcha' => [
                 config('captcha.disable') ? 'nullable' : 'required',
-                'captcha_api:' . request('key') . ',' . config('captcha.type')
+                'captcha_api:' . request('key') . ',' . config('captcha.type'),
             ],
         ];
     }
@@ -71,7 +71,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited(): void
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -97,8 +97,8 @@ class LoginRequest extends FormRequest
 
     public function checkRequest(): ?User
     {
-        if ($this->phone && $this->code && ($this->code === Cache::get('phone_code_' . $this->phone))) {
-            return User::where('phone', $this->phone)->first();
+        if ($this->auth && $this->code && ($this->code === Cache::get('phone_code_' . $this->auth))) {
+            return User::where('phone', $this->auth)->first();
         } else {
             $user = User::where('username', $this->auth)->orWhere('phone', $this->auth)->orWhere('email', $this->auth)->first();
 
