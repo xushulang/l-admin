@@ -23,6 +23,8 @@ return [
     ],
     'boolean'              => ':Attribute 必须为布尔值。',
     'can'                  => ':Attribute 字段包含未经授权的值。',
+    'captcha'              => '验证码错误。',
+    'captcha_api'          => '验证码错误。',
     'confirmed'            => ':Attribute 两次输入不一致。',
     'contains'             => 'The :attribute field is missing a required value.',
     'current_password'     => '密码错误。',

@@ -23,6 +23,8 @@ return [
     ],
     'boolean'              => 'The :attribute field must be true or false.',
     'can'                  => 'The :attribute field contains an unauthorized value.',
+    'captcha'              => 'The verification code is incorrect.',
+    'captcha_api'          => 'The verification code is incorrect.',
     'confirmed'            => 'The :attribute confirmation does not match.',
     'contains'             => 'The :attribute field is missing a required value.',
     'current_password'     => 'The password is incorrect.',
