@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { FormInst, FormRules } from 'naive-ui'
-import ApplicationLogo from '@/Components/ApplicationLogo.vue'
-import GuestLayout from '@/Layouts/GuestLayout.vue'
 import { Head, Link, useForm } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { NAutoComplete, NButton, NCard, NCountdown, NForm, NFormItem, NInput, useMessage } from 'naive-ui'
 import { computed, ref, useTemplateRef } from 'vue'
+import ApplicationLogo from '@/Components/ApplicationLogo.vue'
+import GuestLayout from '@/Layouts/GuestLayout.vue'
 
 defineOptions({ layout: GuestLayout })
 

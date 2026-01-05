@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { PopoverPlacement, TreeSelectOverrideNodeClickBehavior } from 'naive-ui'
 import { Link, router } from '@inertiajs/vue3'
-import IonSearchOutline from '~icons/ion/search-outline'
 import { wTrans } from 'laravel-vue-i18n'
 import { NIcon, NModal, NTooltip, NTreeSelect } from 'naive-ui'
 import { h, onMounted, ref } from 'vue'
+import IonSearchOutline from '~icons/ion/search-outline'
 
 const props = defineProps<{
     placement?: PopoverPlacement

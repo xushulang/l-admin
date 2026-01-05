@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import { NIcon } from 'naive-ui'
+import IonMenuOutline from '~icons/ion/menu-outline'
 import Collapse from '@/Components/Collapse.vue'
 import Fullscreen from '@/Components/Fullscreen.vue'
 import Language from '@/Components/Language.vue'
 import ReloadPage from '@/Components/ReloadPage.vue'
 import ThemeMode from '@/Components/ThemeMode.vue'
-import IonMenuOutline from '~icons/ion/menu-outline'
-import { NIcon } from 'naive-ui'
 import AdminLocation from './Location.vue'
 import Notification from './Notification.vue'
 import Search from './Search.vue'

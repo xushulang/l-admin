@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { User } from '@/types'
 import { Link, router } from '@inertiajs/vue3'
-import AntDesignLogoutOutlined from '~icons/ant-design/logout-outlined'
-import AntDesignProfileOutlined from '~icons/ant-design/profile-outlined'
 import { trans } from 'laravel-vue-i18n'
 import { NAvatar, NDropdown, NIcon, useDialog, useMessage } from 'naive-ui'
 import { h, ref } from 'vue'
+import AntDesignLogoutOutlined from '~icons/ant-design/logout-outlined'
+import AntDesignProfileOutlined from '~icons/ant-design/profile-outlined'
 
 defineProps<{ user: User | null }>()
 

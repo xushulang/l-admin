@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { User } from '@/types'
-import { useSettingStore } from '@/Stores/setting'
 import { Head, useRemember } from '@inertiajs/vue3'
 import { useWindowSize } from '@vueuse/core'
 import { NConfigProvider, NDialogProvider, NDrawer, NDrawerContent, NLayout, NLayoutContent, NLayoutFooter, NLayoutHeader, NLayoutSider, NLoadingBarProvider, NMessageProvider, NModalProvider, NNotificationProvider } from 'naive-ui'
 import { computed, onBeforeMount, ref, toRefs } from 'vue'
+import { useSettingStore } from '@/Stores/setting'
 import AdminFooter from './Admin/Footer.vue'
 import AdminHeader from './Admin/Header.vue'
 import AdminLogo from './Admin/Logo.vue'

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { DataTableColumns } from 'naive-ui'
-import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { trans, wTrans } from 'laravel-vue-i18n'
 import { NCard, NDataTable } from 'naive-ui'
 import { ref, toRef } from 'vue'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
 
 defineOptions({ layout: AdminLayout })
 

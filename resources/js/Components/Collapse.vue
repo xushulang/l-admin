@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { PopoverPlacement } from 'naive-ui'
+import { NIcon, NTooltip } from 'naive-ui'
 import AntDesignMenuFoldOutlined from '~icons/ant-design/menu-fold-outlined'
 import AntDesignMenuUnfoldOutlined from '~icons/ant-design/menu-unfold-outlined'
-import { NIcon, NTooltip } from 'naive-ui'
 
 defineProps<{
     placement?: PopoverPlacement

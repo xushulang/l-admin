@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { useSettingStore } from '@/Stores/setting'
-import IonLanguageOutline from '~icons/ion/language-outline'
 import { loadLanguageAsync } from 'laravel-vue-i18n'
 import { NDropdown, NIcon } from 'naive-ui'
 import { computed, reactive, toRefs } from 'vue'
+import IonLanguageOutline from '~icons/ion/language-outline'
+import { useSettingStore } from '@/Stores/setting'
 
 const { lang } = toRefs(useSettingStore().value)
 

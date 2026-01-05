@@ -1,7 +1,7 @@
-import { languages, themes } from '@/Utils/setting'
 import { createGlobalState, useColorMode, useStorage } from '@vueuse/core'
 import { getActiveLanguage, loadLanguageAsync } from 'laravel-vue-i18n'
 import { ref, watch } from 'vue'
+import { languages, themes } from '@/Utils/setting'
 
 export const useSettingStore = createGlobalState(() => {
     const setting = ref({

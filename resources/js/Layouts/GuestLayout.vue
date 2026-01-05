@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useSettingStore } from '@/Stores/setting'
 import { Head } from '@inertiajs/vue3'
 import { NConfigProvider, NDialogProvider, NLayout, NLoadingBarProvider, NMessageProvider, NModalProvider, NNotificationProvider } from 'naive-ui'
 import { toRefs } from 'vue'
+import { useSettingStore } from '@/Stores/setting'
 
 defineProps<{
     title?: string

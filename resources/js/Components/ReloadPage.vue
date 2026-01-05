@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { PopoverPlacement } from 'naive-ui'
 import { router } from '@inertiajs/vue3'
-import AntDesignReloadOutlined from '~icons/ant-design/reload-outlined'
 import { trans } from 'laravel-vue-i18n'
 import { NIcon, NTooltip, useMessage } from 'naive-ui'
+import AntDesignReloadOutlined from '~icons/ant-design/reload-outlined'
 
 defineProps<{ placement?: PopoverPlacement }>()
 

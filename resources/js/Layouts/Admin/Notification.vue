@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { NotificationReactive, PopoverInst } from 'naive-ui'
 import { Link, usePage } from '@inertiajs/vue3'
-import IonNotificationsCircle from '~icons/ion/notifications-circle'
-import IonNotificationsOutline from '~icons/ion/notifications-outline'
 import { trans } from 'laravel-vue-i18n'
 import { NBadge, NButton, NCard, NEllipsis, NEmpty, NIcon, NPopconfirm, NPopover, NSkeleton, NTime, useMessage, useNotification } from 'naive-ui'
 import { computed, h, onBeforeMount, ref, useTemplateRef } from 'vue'
+import IonNotificationsCircle from '~icons/ion/notifications-circle'
+import IonNotificationsOutline from '~icons/ion/notifications-outline'
 
 const notification = useNotification()
 const message = useMessage()

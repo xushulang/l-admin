@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Link, router } from '@inertiajs/vue3'
-import AntDesignHomeOutlined from '~icons/ant-design/home-outlined'
-import AntDesignLogoutOutlined from '~icons/ant-design/logout-outlined'
-import AntDesignUserOutlined from '~icons/ant-design/user-outlined'
 import { trans } from 'laravel-vue-i18n'
 import { NAvatar, NDropdown, NIcon, useDialog, useMessage } from 'naive-ui'
 import { h, ref } from 'vue'
+import AntDesignHomeOutlined from '~icons/ant-design/home-outlined'
+import AntDesignLogoutOutlined from '~icons/ant-design/logout-outlined'
+import AntDesignUserOutlined from '~icons/ant-design/user-outlined'
 
 const dialog = useDialog()
 const message = useMessage()

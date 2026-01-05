@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { PopoverPlacement } from 'naive-ui'
-import { useSettingStore } from '@/Stores/setting'
-import { themes } from '@/Utils/setting'
 import { useColorMode, useCycleList } from '@vueuse/core'
 import { NIcon, NTooltip } from 'naive-ui'
 import { toRefs, watchEffect } from 'vue'
+import { useSettingStore } from '@/Stores/setting'
+import { themes } from '@/Utils/setting'
 
 defineProps<{ placement?: PopoverPlacement }>()
 

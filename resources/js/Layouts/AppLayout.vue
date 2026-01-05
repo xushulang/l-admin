@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { useSettingStore } from '@/Stores/setting'
 import { Head } from '@inertiajs/vue3'
 import { NBackTop, NConfigProvider, NDialogProvider, NLayout, NLayoutContent, NLayoutFooter, NLayoutHeader, NLoadingBarProvider, NMessageProvider, NModalProvider, NNotificationProvider } from 'naive-ui'
 import { toRefs } from 'vue'
+import { useSettingStore } from '@/Stores/setting'
 import AppFooter from './App/Footer.vue'
 import AppHeader from './App/Header.vue'
 

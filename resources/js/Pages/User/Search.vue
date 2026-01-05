@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { FormInst, FormRules } from 'naive-ui'
-import { useAdminStore } from '@/Stores/admin'
 import { router, useForm } from '@inertiajs/vue3'
 import { useUrlSearchParams, useWindowSize } from '@vueuse/core'
 import { trans } from 'laravel-vue-i18n'
 import { NButton, NCollapseTransition, NForm, NFormItem, NInput } from 'naive-ui'
 import { computed, onBeforeMount, toRef, useTemplateRef } from 'vue'
+import { useAdminStore } from '@/Stores/admin'
 
 const showUserSearchForm = toRef(useAdminStore().value, 'showUserSearchForm')
 

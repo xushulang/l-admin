@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import AdminLayout from '@/Layouts/AdminLayout.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { trans } from 'laravel-vue-i18n'
 import { NButton, NCard, NCheckbox, NPagination, NPopconfirm, NSkeleton, NTime, useMessage } from 'naive-ui'
 import { ref, toRefs } from 'vue'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
 
 defineOptions({ layout: AdminLayout })
 

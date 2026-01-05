@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { NDivider } from 'naive-ui'
 import ApplicationLogo from '@/Components/ApplicationLogo.vue'
 import ThemeMode from '@/Components/ThemeMode.vue'
-import { NDivider } from 'naive-ui'
 import Menu from './Menu.vue'
 import UserCenter from './UserCenter.vue'
 </script>

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Role } from '@/types'
 import type { FormInst, FormRules } from 'naive-ui'
+import type { Role } from '@/types'
 import { useForm } from '@inertiajs/vue3'
 import { useWindowSize } from '@vueuse/core'
-import TablerPlus from '~icons/tabler/plus'
 import { trans } from 'laravel-vue-i18n'
 import { NButton, NForm, NFormItem, NIcon, NInput, NModal, useMessage } from 'naive-ui'
 import { computed, ref, useTemplateRef } from 'vue'
+import TablerPlus from '~icons/tabler/plus'
 
 const props = defineProps<{ role?: Role }>()
 

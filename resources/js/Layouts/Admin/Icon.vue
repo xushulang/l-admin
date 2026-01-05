@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Depth } from 'naive-ui/es/icon/src/Icon'
+import { NIcon } from 'naive-ui'
 import CarbonUser from '~icons/carbon/user'
 import FluentPersonBoard20Regular from '~icons/fluent/person-board-20-regular'
 import IonCubeOutline from '~icons/ion/cube-outline'
@@ -7,7 +8,6 @@ import IonNotificationsOutline from '~icons/ion/notifications-outline'
 import MaterialSymbolsCircleOutline from '~icons/material-symbols/circle-outline'
 import MaterialSymbolsDashboardOutline from '~icons/material-symbols/dashboard-outline'
 import MaterialSymbolsFingerprint from '~icons/material-symbols/fingerprint'
-import { NIcon } from 'naive-ui'
 
 defineOptions({
     components: {

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { PopoverPlacement } from 'naive-ui'
 import { useFullscreen } from '@vueuse/core'
+import { NIcon, NTooltip } from 'naive-ui'
 import AntDesignFullscreenExitOutlined from '~icons/ant-design/fullscreen-exit-outlined'
 import AntDesignFullscreenOutlined from '~icons/ant-design/fullscreen-outlined'
-import { NIcon, NTooltip } from 'naive-ui'
 
 defineProps<{ placement?: PopoverPlacement }>()
 

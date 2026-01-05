@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import type { Data, User } from '@/types'
 import type { DataTableColumns, PaginationInfo, PaginationProps } from 'naive-ui'
-import AdminLayout from '@/Layouts/AdminLayout.vue'
-import { handleSearchParams } from '@/Utils/helper'
+import type { Data, User } from '@/types'
 import { router } from '@inertiajs/vue3'
 import { useWindowSize } from '@vueuse/core'
 import { trans } from 'laravel-vue-i18n'
 import { NAvatar, NButton, NCard, NDataTable, NSpace, NTime, useDialog, useMessage } from 'naive-ui'
 import { computed, h, reactive, ref } from 'vue'
+import AdminLayout from '@/Layouts/AdminLayout.vue'
+import { handleSearchParams } from '@/Utils/helper'
 import CreateOrEdit from './CreateOrEdit.vue'
 import Toolbar from './Toolbar.vue'
 

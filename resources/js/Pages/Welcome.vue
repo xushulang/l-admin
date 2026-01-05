@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import AppLayout from '@/Layouts/AppLayout.vue'
 import { Head } from '@inertiajs/vue3'
 import { onMounted, ref } from 'vue'
+import AppLayout from '@/Layouts/AppLayout.vue'
 
 defineOptions({ layout: AppLayout })
 
@@ -17,8 +17,8 @@ const height = ref(0)
 onMounted(() => {
     height.value
         = window.innerHeight
-        - (document.querySelector('.n-layout-header')?.clientHeight || 0)
-        - (document.querySelector('.n-layout-footer')?.clientHeight || 0)
+            - (document.querySelector('.n-layout-header')?.clientHeight || 0)
+            - (document.querySelector('.n-layout-footer')?.clientHeight || 0)
 })
 </script>
 
