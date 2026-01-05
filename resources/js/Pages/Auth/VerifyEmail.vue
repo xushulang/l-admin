@@ -6,7 +6,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue'
 
 defineOptions({ layout: GuestLayout })
 
-const props = defineProps<{ status?: string }>()
+const { status } = defineProps<{ status?: string }>()
 
 const form = useForm({})
 
@@ -14,7 +14,7 @@ function submit() {
     form.post(route('verification.send'))
 }
 
-const verificationLinkSent = computed(() => props.status === 'verification-link-sent')
+const verificationLinkSent = computed(() => status === 'verification-link-sent')
 </script>
 
 <template>

@@ -8,17 +8,17 @@ import { NButton, NForm, NFormItem, NIcon, NInput, NModal, useMessage } from 'na
 import { computed, ref, useTemplateRef } from 'vue'
 import TablerPlus from '~icons/tabler/plus'
 
-const props = defineProps<{ user?: User }>()
+const { user } = defineProps<{ user?: User }>()
 
 const message = useMessage()
 
 const showModal = ref(false)
 
 const model = useForm({
-    name: props.user?.name || '',
-    username: props.user?.username || '',
-    phone: props.user?.phone || '',
-    email: props.user?.email || '',
+    name: user?.name || '',
+    username: user?.username || '',
+    phone: user?.phone || '',
+    email: user?.email || '',
     password: '',
 })
 
@@ -84,8 +84,8 @@ function submit(e: Event) {
     formRef.value?.validate((errors) => {
         if (!errors) {
             model.submit(
-                props.user ? 'put' : 'post',
-                route(props.user ? 'user.update' : 'user.store', props.user?.id),
+                user ? 'put' : 'post',
+                route(user ? 'user.update' : 'user.store', user?.id),
                 {
                     onSuccess: (res) => {
                         showModal.value = false

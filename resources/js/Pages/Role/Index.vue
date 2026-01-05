@@ -13,7 +13,7 @@ import Toolbar from './Toolbar.vue'
 
 defineOptions({ layout: AdminLayout })
 
-const props = defineProps<{ roles: Data<Role> }>()
+const { roles } = defineProps<{ roles: Data<Role> }>()
 
 const dialog = useDialog()
 const message = useMessage()
@@ -64,16 +64,16 @@ const columns: DataTableColumns<Role> = [
 ]
 
 const pagination: PaginationProps = reactive({
-    page: props.roles.current_page,
-    pageSize: props.roles.per_page,
+    page: roles.current_page,
+    pageSize: roles.per_page,
     showSizePicker: true,
     pageSizes: [15, 30, 45, 60, 100],
-    itemCount: props.roles.total,
+    itemCount: roles.total,
     showQuickJumper: true,
     prefix: (info: PaginationInfo) => h('span', trans(':count in Total', { count: info.itemCount?.toString() || '0' })),
     simple: computed(() => width.value < 640),
     onChange: (page: number) => {
-        getData(page, props.roles.per_page)
+        getData(page, roles.per_page)
     },
     onUpdatePageSize: (pageSize: number) => {
         getData(1, pageSize)
@@ -116,13 +116,6 @@ function destroy(id: number) {
             <Toolbar />
         </template>
 
-        <NDataTable
-            :loading
-            :columns
-            :data="roles.data"
-            :row-key="(row: Role) => row.id"
-            :pagination
-            :scroll-x="800"
-        />
+        <NDataTable :loading :columns :data="roles.data" :row-key="(row: Role) => row.id" :pagination :scroll-x="800" />
     </NCard>
 </template>

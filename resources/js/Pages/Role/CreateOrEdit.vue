@@ -8,16 +8,16 @@ import { NButton, NForm, NFormItem, NIcon, NInput, NModal, useMessage } from 'na
 import { computed, ref, useTemplateRef } from 'vue'
 import TablerPlus from '~icons/tabler/plus'
 
-const props = defineProps<{ role?: Role }>()
+const { role } = defineProps<{ role?: Role }>()
 
 const message = useMessage()
 
 const showModal = ref(false)
 
 const model = useForm({
-    name: props.role?.name || '',
-    title: props.role?.title || '',
-    description: props.role?.description || '',
+    name: role?.name || '',
+    title: role?.title || '',
+    description: role?.description || '',
 })
 
 const formRef = useTemplateRef<FormInst | null>('formRef')
@@ -68,8 +68,8 @@ function submit(e: Event) {
     formRef.value?.validate((errors) => {
         if (!errors) {
             model.submit(
-                props.role ? 'put' : 'post',
-                route(props.role ? 'role.update' : 'role.store', props.role?.id),
+                role ? 'put' : 'post',
+                route(role ? 'role.update' : 'role.store', role?.id),
                 {
                     onSuccess: (res) => {
                         showModal.value = false

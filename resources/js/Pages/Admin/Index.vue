@@ -7,7 +7,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue'
 
 defineOptions({ layout: AdminLayout })
 
-const props = defineProps<{
+const { serverInfo } = defineProps<{
     serverInfo: {
         'Server': string
         'Laravel Framework': string
@@ -34,27 +34,27 @@ const data = ref([
     {
         key: 0,
         name: wTrans('Server System'),
-        value: props.serverInfo.Server,
+        value: serverInfo.Server,
     },
     {
         key: 0,
         name: 'Laravel Framework',
-        value: props.serverInfo['Laravel Framework'],
+        value: serverInfo['Laravel Framework'],
     },
     {
         key: 0,
         name: wTrans('Environment'),
-        value: props.serverInfo.Environment,
+        value: serverInfo.Environment,
     },
     {
         key: 0,
         name: wTrans('PHP Version'),
-        value: props.serverInfo.PHP,
+        value: serverInfo.PHP,
     },
     {
         key: 0,
         name: wTrans('MySQL Version'),
-        value: props.serverInfo.MySQL,
+        value: serverInfo.MySQL,
     },
 ])
 </script>

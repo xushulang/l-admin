@@ -13,7 +13,7 @@ import Toolbar from './Toolbar.vue'
 
 defineOptions({ layout: AdminLayout })
 
-const props = defineProps<{ users: Data<User> }>()
+const { users } = defineProps<{ users: Data<User> }>()
 
 const dialog = useDialog()
 const message = useMessage()
@@ -79,16 +79,16 @@ const columns: DataTableColumns<User> = [
 ]
 
 const pagination: PaginationProps = reactive({
-    page: props.users.current_page,
-    pageSize: props.users.per_page,
+    page: users.current_page,
+    pageSize: users.per_page,
     showSizePicker: true,
     pageSizes: [15, 30, 45, 60, 100],
-    itemCount: props.users.total,
+    itemCount: users.total,
     showQuickJumper: true,
     prefix: (info: PaginationInfo) => h('span', trans(':count in Total', { count: info.itemCount?.toString() || '0' })),
     simple: computed(() => width.value < 640),
     onChange: (page: number) => {
-        getData(page, props.users.per_page)
+        getData(page, users.per_page)
     },
     onUpdatePageSize: (pageSize: number) => {
         getData(1, pageSize)
@@ -131,13 +131,6 @@ function destroy(id: number) {
             <Toolbar />
         </template>
 
-        <NDataTable
-            :loading
-            :columns
-            :data="users.data"
-            :row-key="(row: User) => row.id"
-            :pagination
-            :scroll-x="1200"
-        />
+        <NDataTable :loading :columns :data="users.data" :row-key="(row: User) => row.id" :pagination :scroll-x="1200" />
     </NCard>
 </template>

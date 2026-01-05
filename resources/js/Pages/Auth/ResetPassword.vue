@@ -8,7 +8,7 @@ import GuestLayout from '@/Layouts/GuestLayout.vue'
 
 defineOptions({ layout: GuestLayout })
 
-const props = defineProps<{
+const { email, token } = defineProps<{
     email: string
     token: string
 }>()
@@ -16,8 +16,8 @@ const props = defineProps<{
 const formRef = useTemplateRef<FormInst | null>('formRef')
 
 const model = useForm({
-    token: props.token,
-    email: props.email,
+    token,
+    email,
     password: '',
     password_confirmation: '',
 })
