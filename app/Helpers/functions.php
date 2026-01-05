@@ -2,7 +2,8 @@
 
 if (! function_exists('getTree')) {
     /**
-     * Tree
+     * Transform array to a tree structure.
+     * 将数组转化为树状结构
      */
     function getTree($array, $parent_id = 0, $level = 0, $levelLimit = null, $idName = 'id', $parentIDName = 'parent_id', $childrenName = 'children')
     {
