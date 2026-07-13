@@ -80,7 +80,7 @@
             "extensions": [
                 "MS-CEINTL.vscode-language-pack-zh-hans",
                 "Codeium.codeium",
-                "RooVeterinaryInc.roo-cline",
+                "kilocode.Kilo-Code",
                 "bmewburn.vscode-intelephense-client",
                 "eamodio.gitlens",
                 "esbenp.prettier-vscode",
