@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3'
 import { NBackTop, NConfigProvider, NDialogProvider, NLayout, NLayoutContent, NLayoutFooter, NLayoutHeader, NLoadingBarProvider, NMessageProvider, NModalProvider, NNotificationProvider } from 'naive-ui'
-import { toRefs } from 'vue'
-import { useSettingStore } from '@/Stores/setting'
+import { useLocale } from '@/Composables/Common/useLocale'
+import { useTheme } from '@/Composables/Common/useTheme'
 import AppFooter from './App/Footer.vue'
 import AppHeader from './App/Header.vue'
 
@@ -12,7 +12,8 @@ defineProps<{
     description?: string
 }>()
 
-const { theme, locale, dateLocale } = toRefs(useSettingStore().value)
+const { naiveTheme, themeOverrides } = useTheme()
+const { locale, dateLocale } = useLocale()
 </script>
 
 <template>
@@ -25,7 +26,7 @@ const { theme, locale, dateLocale } = toRefs(useSettingStore().value)
             <meta v-if="description" name="description" :content="description">
         </Head>
 
-        <NConfigProvider :theme :locale :date-locale>
+        <NConfigProvider :theme="naiveTheme" :theme-overrides="themeOverrides" :locale :date-locale>
             <NLoadingBarProvider>
                 <NDialogProvider>
                     <NNotificationProvider>

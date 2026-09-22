@@ -3,8 +3,9 @@ import type { User } from '@/types'
 import { Head, useRemember } from '@inertiajs/vue3'
 import { useWindowSize } from '@vueuse/core'
 import { NConfigProvider, NDialogProvider, NDrawer, NDrawerContent, NLayout, NLayoutContent, NLayoutFooter, NLayoutHeader, NLayoutSider, NLoadingBarProvider, NMessageProvider, NModalProvider, NNotificationProvider } from 'naive-ui'
-import { computed, onBeforeMount, ref, toRefs } from 'vue'
-import { useSettingStore } from '@/Stores/setting'
+import { computed, onBeforeMount, ref } from 'vue'
+import { useLocale } from '@/Composables/Common/useLocale'
+import { useTheme } from '@/Composables/Common/useTheme'
 import AdminFooter from './Admin/Footer.vue'
 import AdminHeader from './Admin/Header.vue'
 import AdminLogo from './Admin/Logo.vue'
@@ -23,7 +24,8 @@ const props = defineProps<{
 
 const title = computed(() => props.title || props.currentLocation[props.currentLocation.length - 1].title)
 
-const { theme, locale, dateLocale } = toRefs(useSettingStore().value)
+const { naiveTheme, themeOverrides } = useTheme()
+const { locale, dateLocale } = useLocale()
 
 const collapsed = ref(false)
 const active = ref(false)
@@ -39,7 +41,7 @@ const menus = useRemember(props.menus, 'menus')
     <div>
         <Head :title="title" />
 
-        <NConfigProvider :theme :locale :date-locale>
+        <NConfigProvider :theme="naiveTheme" :theme-overrides="themeOverrides" :locale :date-locale>
             <NLoadingBarProvider>
                 <NDialogProvider>
                     <NNotificationProvider>
