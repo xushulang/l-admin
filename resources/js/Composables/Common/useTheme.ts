@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { themes } from '@/Utils/setting'
 
 export function useTheme() {
-    const { store, system } = useColorMode({ emitAuto: true })
+    const { store, system } = useColorMode({ storageKey: 'theme' })
 
     const theme = computed(() => (store.value === 'auto' ? system.value : store.value))
 

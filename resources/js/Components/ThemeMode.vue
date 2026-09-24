@@ -7,7 +7,7 @@ import { themes } from '@/Utils/setting'
 
 defineProps<{ placement?: PopoverPlacement }>()
 
-const { store } = useColorMode({ emitAuto: true })
+const { store } = useColorMode({ storageKey: 'theme' })
 
 const { state, next } = useCycleList(Object.keys(themes), { initialValue: store })
 
