@@ -16,7 +16,7 @@ pinia.use(piniaPluginPersistedstate)
 
 function getPersistedLang(): string | undefined {
     try {
-        const data = JSON.parse(localStorage.getItem('setting') || '{}')
+        const data = JSON.parse(localStorage.getItem('language') || localStorage.getItem('setting') || '{}')
         return data.lang
     }
     catch {

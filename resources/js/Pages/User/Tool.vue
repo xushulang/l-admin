@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { NButton } from 'naive-ui'
-import { toRef } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useAdminStore } from '@/Stores/admin'
 import CreateOrEdit from './CreateOrEdit.vue'
 
-const showUserSearchForm = toRef(useAdminStore().value, 'showUserSearchForm')
+const { showUserSearchForm } = storeToRefs(useAdminStore())
 </script>
 
 <template>
