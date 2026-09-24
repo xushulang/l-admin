@@ -17,6 +17,15 @@ export const useLanguageStore = defineStore(
         return { lang }
     },
     {
-        persist: true,
+        persist: {
+            key: 'lang',
+            serializer: {
+                serialize: state => state.lang,
+                deserialize: value => ({ lang: value }),
+            },
+            afterHydrate: ({ store: piniaStore }) => {
+                piniaStore.$persist()
+            },
+        },
     },
 )
