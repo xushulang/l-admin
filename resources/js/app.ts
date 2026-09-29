@@ -14,6 +14,12 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel'
 const pinia = createPinia()
 pinia.use(piniaPluginPersistedstate)
 
+function getInitialLang(): string {
+    const availableLangs = ['zh_CN', 'en']
+    const lang = localStorage.getItem('lang') || import.meta.env.VITE_APP_LOCALE
+    return lang && availableLangs.includes(lang) ? lang : availableLangs[0]
+}
+
 createInertiaApp({
     title: title => `${title} - ${appName}`,
     resolve: name => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob<DefineComponent>('./Pages/**/*.vue')),
@@ -23,7 +29,7 @@ createInertiaApp({
             .use(pinia)
             .use(ZiggyVue)
             .use(i18nVue, {
-                lang: localStorage.getItem('lang') || import.meta.env.VITE_APP_LOCALE,
+                lang: getInitialLang(),
                 resolve: async (lang: string) => {
                     const langs = import.meta.glob('../../lang/*.json')
                     return await langs[`../../lang/${lang}.json`]()
